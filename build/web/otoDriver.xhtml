@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+
+    </h:head>
+    <h:body>
+        <ui:composition template="/template/template.xhtml">
+
+            <ui:define name="content">
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-table mr-1"></i>
+                        Quản lý ôto
+                    </div>
+
+                    <div class="card-body">
+                        <div class="table-responsive">
+
+                            <p:outputPanel id="opnMain">
+
+                                <p:outputPanel id="opnList" rendered="#{otoController.displayMain()}">
+                                    <p:panelGrid columns="2" layout="grid" columnClasses="ui-g-12 ui-md-3 ui-lg-3, ui-g-12 ui-md-9 ui-lg-9" styleClass="ui-panelgrid-blank">
+                                        <p:outputPanel id="opnListTypeOto" >
+                                            <p:panel header="Danh sách loại oto">
+                                                <p:commandButton value="Thêm" style="margin-bottom: 10px" process="@this" update="opnMain" actionListener="#{otoController.changeStateAddTypeOto()}"/>
+                                                <p:dataTable id="tblListTypeOto" value="#{otoController.mlstTypeOto}" var="entity" selectionMode="single" 
+                                                             selection="#{otoController.selectedType}" rowKey="#{entity.idTypeOto}" 
+                                                             paginator="true" paginatorPosition="bottom"  rows="5"
+                                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                             currentPageReportTemplate="{startRecord}-{endRecord} của {totalRecords} bản ghi"
+                                                             rowsPerPageTemplate="1,5,10,15">
+                                                    <p:ajax event="rowSelect" listener="#{otoController.onRowSelect}" update=":form_main:messages :form_main:tblListOto :form_main:opnListOto" process="@this" />
+                                                    <p:column headerText="Thao tác">
+                                                        <p:commandLink styleClass="pi pi-pencil" title="Sửa" process="@this" update=":form_main:opnMain" actionListener="#{otoController.changeStateEditTypeOto(entity)}"/>
+                                                        <p:commandLink styleClass="pi pi-eye" title="Xem" process="@this" update=":form_main:opnMain" actionListener="#{otoController.changeStateViewTypeOto(entity)}"/>
+                                                        <p:commandLink styleClass="pi pi-trash" title="Xoá" process="@this" update=":form_main:messages, :form_main:tblListTypeOto" actionListener="#{otoController.handDeleteTypeOto(entity)}">
+                                                            <p:confirm header="Xác nhận xoá" message="Bạn có muốn xoá không" icon="pi pi-exclamation-triangle" />
+                                                        </p:commandLink>
+                                                    </p:column>
+                                                    <p:column headerText="Loại xe" sortBy="#{entity.nameTypeOto}">
+                                                        <p:outputLabel value="#{entity.nameTypeOto}" />
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </p:panel>
+                                        </p:outputPanel>
+
+                                        <p:outputPanel id="opnListOto">
+                                            <p:panel header="Danh sách oto">
+                                                <p:commandButton value="Thêm" style="margin-bottom: 10px" process="@this" update="opnMain" actionListener="#{otoController.changeStateAddOto()}"
+                                                                 disabled="#{otoController.oto.idTypeOto eq '0'}"/>
+                                                <p:dataTable id="tblListOto" value="#{otoController.mlstOto}" var="ot" rowKey="#{ot.idOto}" 
+                                                             paginator="true" paginatorPosition="bottom"  rows="5"
+                                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                             currentPageReportTemplate="{startRecord}-{endRecord} của {totalRecords} bản ghi"
+                                                             rowsPerPageTemplate="1,5,10,15" emptyMessage="Chưa có nhân viên">
+                                                    <p:column headerText="Thao tác">
+                                                        <p:commandLink styleClass="pi pi-pencil" title="Sửa" process="@this" update=":form_main:opnMain" actionListener="#{otoController.changeStateEditOto(ot)}"/>
+                                                        <p:commandLink styleClass="pi pi-eye" title="Xem" process="@this" update=":form_main:opnMain" actionListener="#{otoController.changeStateViewOto(ot)}"/>
+                                                        <p:commandLink styleClass="pi pi-trash" title="Xoá" process="@this" update=":form_main tblListOto" actionListener="#{otoController.handDeleteOto(ot)}">
+                                                            <p:confirm header="Xác nhận xoá" message="Bạn có muốn xoá không" icon="pi pi-exclamation-triangle" />
+                                                        </p:commandLink>
+                                                    </p:column>
+
+                                                    <p:column headerText="Tên oto" >
+                                                        <p:outputLabel value="#{ot.nameOto}" />
+                                                    </p:column>
+
+                                                    <p:column headerText="Trạng thái">
+                                                        <p:outputLabel value="Đã có lái xe" rendered="#{ot.status eq '1'}"/>
+                                                        <p:outputLabel value="Hết hiệu lực" rendered="#{ot.status eq '0'}"/>
+                                                        <p:outputLabel value="Chưa có lái xe" rendered="#{ot.status eq '2'}"/>
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </p:panel>
+                                        </p:outputPanel>
+                                    </p:panelGrid>
+                                </p:outputPanel>
+
+                                <p:outputPanel id="opnDetail" rendered="#{not otoController.displayMain()}">
+                                    <p:outputPanel id="opnDetailTypeOto" rendered="#{otoController.displayDetail()}">
+                                        <p:panel header="Thông tin chi tiết loại xe">
+                                            <p:panelGrid columns="4" layout="grid" columnClasses="ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-9 ui-lg-4, ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-9 ui-lg-4" styleClass="ui-panelgrid-blank">
+                                                <p:outputLabel value="Loại xe" for="typeOto" />
+                                                <p:inputText id="typeOto" value="#{otoController.typeOto.nameTypeOto}" disabled="#{otoController.isView}" />
+                                            </p:panelGrid>
+                                            <center>
+                                                <p:commandButton value="Đồng ý" process="@this, opnDetailTypeOto" update="opnMain, :form_main:messages" rendered="#{not otoController.isView}" actionListener="#{otoController.handSave()}" icon="pi pi-save" />
+                                                <p:commandButton value="Quay lại" process="@this" update="opnMain" actionListener="#{otoController.handCancel()}" icon="pi pi-refresh" />
+                                            </center>
+                                        </p:panel>
+                                    </p:outputPanel>
+
+                                    <p:outputPanel id="opnDetailOto" rendered="#{not otoController.displayDetail()}">
+                                        <p:panel header="Thông tin chi tiết oto">
+                                            <p:panelGrid columns="4" layout="grid" columnClasses="ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-9 ui-lg-4, ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-9 ui-lg-4" styleClass="ui-panelgrid-blank">
+                                                <p:outputLabel value="Loại xe"/>
+                                                <p:outputLabel value="#{otoController.getNameTypeOto(otoController.oto.idTypeOto)}"/>
+
+                                                <p:outputLabel value="Tên oto" for="tenOto" />
+                                                <p:inputText value="#{otoController.oto.nameOto}" id="tenOto" disabled="#{otoController.isView}"/>
+
+                                                <p:outputLabel value="Tên người lái xe" for="nameDriver" />
+                                                <p:selectOneMenu style="width: 100%;" id="nameDriver" value="#{otoController.oto.idDriver}" disabled="#{otoController.isView}">
+                                                    <f:selectItem itemValue="" itemLabel="Chọn người lái xe" />
+                                                    <f:selectItems value="#{otoController.mlstDriver}" var="driver" itemLabel="#{driver.nameEmployee}" itemValue="#{driver.idEmployee}" />
+                                                </p:selectOneMenu>
+                                            </p:panelGrid>
+
+                                            <center>
+                                                <p:commandButton value="Đồng ý" icon="pi pi-save" process="@this, opnDetail" update="opnMain, :form_main:messages" rendered="#{not otoController.isView}" actionListener="#{otoController.handSave()}" />
+                                                <p:commandButton value="Quay lại" icon="pi pi-refresh" process="@this" update="opnMain" actionListener="#{otoController.handCancel()}"/>
+                                            </center>
+                                        </p:panel>
+                                    </p:outputPanel>
+
+                                </p:outputPanel>
+
+                            </p:outputPanel>
+
+                        </div>
+                    </div>
+                </div>
+
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

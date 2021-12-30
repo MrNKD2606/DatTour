@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Driver</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/template/template.xhtml">
+            <ui:define name="content">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-table mr-1"></i>
+                        Quản lý người lái xe
+                    </div>
+
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <p:outputPanel id="opnMain">
+                                <!--Danh sách người lái xe-->
+                                <p:outputPanel id="opnListDriver" rendered="#{driverController.displayMain()}">
+                                    <p:commandButton value="Thêm" process="@this" update=":form_main:opnMain" actionListener="#{driverController.changeStateAdd()}" />
+
+                                    <p:dataTable id="tblDriver" value="#{driverController.mlstDriver}" var="entity">
+                                        <p:column headerText="">
+                                            <p:commandLink value="Sửa " actionListener="#{driverController.changeStateEdit(entity)}" process="@this" update=":form_main:opnMain" /> 
+                                            <p:commandLink value="Xem " actionListener="#{driverController.changeStateView(entity)}" process="@this" update=":form_main:opnMain" /> 
+                                            <p:commandLink value="Xóa " actionListener="#{driverController.handDelete(entity)}" process="@this" update=":form_main:messages, :form_main:tblDriver">
+                                                <p:confirm header="Xác nhận xóa" message="Bạn có muốn xóa không" icon="pi pi-exclamation-triangle" />
+                                            </p:commandLink>
+                                        </p:column>
+
+                                        <p:column headerText="Tên lái xe">
+                                            <p:outputLabel value="#{entity.nameEmployee}" />
+                                        </p:column>
+                                        <p:column headerText="Ngày sinh">
+                                            <p:outputLabel value="#{employeesController.getNgaySinhView(entity.birthDay)}" />
+                                        </p:column>
+                                        <p:column headerText="Địa chỉ">
+                                            <p:outputLabel value="#{entity.address}" />
+                                        </p:column>
+                                        <p:column headerText="Số điện thoại">
+                                            <p:outputLabel value="#{entity.phoneNumber}" />
+                                        </p:column>
+                                        <p:column headerText="Giới tính">
+                                            <p:outputLabel value="Nam" rendered="#{entity.gender eq '1'}"/>
+                                            <p:outputLabel value="Nữ" rendered="#{entity.gender eq '0'}"/>
+                                        </p:column>
+                                        <p:column headerText="Trạng thái xe">
+                                            <p:outputLabel value="Đã có xe" rendered="#{entity.statusOto eq '1'}"/>
+                                            <p:outputLabel value="Chưa có xe" rendered="#{entity.statusOto eq '0'}"/>
+                                        </p:column>
+                                        <p:column headerText="Trạng thái">
+                                            <p:outputLabel value="Hết hiệu lực" rendered="#{entity.status eq '0'}"/>
+                                            <p:outputLabel value="Đã có tour" rendered="#{entity.status eq '1'}"/>
+                                            <p:outputLabel value="Chưa có tour" rendered="#{entity.status eq '2'}"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:outputPanel>
+
+                                <!--Form đăng ký-->
+                                <p:outputPanel id="opnDriver" rendered="#{not driverController.displayMain()}">
+                                    <p:panel id="panelRegister" header="Đăng ký thông tin người lái xe">
+                                        <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-9 ui-lg-4, ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-9 ui-lg-4">
+                                            <p:outputLabel value="Họ và tên" for="name" />
+                                            <p:inputText id="name" class="text-capitalize" value="#{driverController.driver.nameEmployee}" disabled="#{driverController.isView}" required="true" requiredMessage="Họ và tên bắt buộc nhập" maxlength="50">
+                                                <p:ajax global="false" event="blur" process="@this, :form_main:name" update=":form_main:name" />
+                                            </p:inputText>
+
+                                            <p:outputLabel value="Giới tính" for="gender" />
+                                            <p:selectOneRadio id="gender" value="#{driverController.driver.gender}" disabled="#{driverController.isView}" required="true" rendered="true" requiredMessage="Giới tính bắt buộc nhập">
+                                                <f:selectItem itemLabel="Nam" itemValue="1" />
+                                                <f:selectItem itemLabel="Nữ" itemValue="0" />
+                                            </p:selectOneRadio>
+
+                                            <p:outputLabel value="Ngày sinh" for="birthDay" />
+                                            <p:calendar id="birthDay" value="#{driverController.driver.birthDay}" required="true" maxdate="" disabled="#{driverController.isView}" requiredMessage="Ngày sinh bắt buộc nhập" navigator="true" pattern="dd/MM/yyyy" />
+
+                                            <p:outputLabel value="Số điện thoại" for="phoneNumber" />
+                                            <p:inputText id="phoneNumber" value="#{driverController.driver.phoneNumber}" maxlength="10" disabled="#{driverController.isView}" required="true" rendered="true" requiredMessage="Số điện thoại bắt buộc nhập">
+                                                <p:ajax global="false" event="blur" process="@this, :form_main:phoneNumber" update=":form_main:phoneNumber" /> 
+                                            </p:inputText>
+
+                                            <p:outputLabel value="Địa chỉ" for="address" />
+                                            <p:inputText id="address" value="#{driverController.driver.address}" disabled="#{driverController.isView}" maxlength="60" required="true" requiredMessage="Địa chỉ bắt buộc nhập" />
+
+                                            <p:outputLabel value="CMND/CCCD" for="idNo" />
+                                            <p:inputText id="idNo" value="#{driverController.driver.idNo}" disabled="#{driverController.isView}" maxlength="12" required="true" requiredMessage="CMND/CCCD bắt buộc nhập" />
+
+                                            <p:outputLabel value="Ngày cấp" for="issueDate" />
+                                            <p:calendar id="issueDate" value="#{driverController.driver.issueDate}" disabled="#{driverController.isView}" maxdate="" required="true" requiredMessage="Ngày cấp CMND/CCCD bắt buộc nhập" navigator="true" pattern="dd/MM/yyyy" />
+
+                                            <p:outputLabel value="Nơi cấp" for="issuePlace" />
+                                            <p:inputText id="issuePlace" value="#{driverController.driver.issuePlace}" disabled="#{driverController.isView}" required="true" requiredMessage="Nơi cấp CMND/CCCD bắt buộc nhập" />
+                                        
+                                            <p:outputLabel value="Loại xe" for="typeOto" />
+                                            <p:selectOneMenu style="width: 100%;" id="typeOto"  value="#{driverController.driver.idTypeOto}" disabled="#{driverController.isView}">
+                                                <p:ajax listener="#{driverController.onRowSelectOtoByType()}" update="oto" />
+                                                <f:selectItem itemValue="" itemLabel="Chọn loại oto" />
+                                                <f:selectItems value="#{driverController.mlstTypeOto}" var="typeOto" itemLabel="#{typeOto.nameTypeOto}" itemValue="#{typeOto.idTypeOto}" />             
+                                            </p:selectOneMenu>
+                                        
+                                            <p:outputLabel value="Xe oto" for="oto" />
+                                            <p:selectOneMenu style="width: 100%;" id="oto" value="#{driverController.driver.idOto}" disabled="#{driverController.isView}">
+                                                <f:selectItem itemValue="" itemLabel="Chọn oto" />
+                                                <f:selectItems value="#{driverController.mlstOtoByType}" var="oto" itemLabel="#{oto.nameOto}" itemValue="#{oto.idOto}" />
+                                            </p:selectOneMenu>
+                                        
+                                        </p:panelGrid>
+
+                                        <div class="row">
+                                            <div class="col-12 text-center">
+                                                <p:commandButton value="Đồng ý" id="ok" process="@this, form_main:opnDriver" update=":form_main:messages opnMain" actionListener="#{driverController.handSave()}" icon="pi pi-save" resetValues="false" rendered="#{not driverController.isView}" />
+                                                <p:commandButton value="Quay lại" id="canncel" process="@this" update="opnMain" actionListener="#{driverController.handCancel()}" resetValues="" icon="pi pi-refresh" />
+                                            </div>
+                                        </div>
+                                    </p:panel>
+                                </p:outputPanel>
+                            </p:outputPanel>
+
+                        </div>
+                    </div>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

@@ -1,0 +1,139 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title>Menu</title>
+    </h:head>
+    <h:body>
+        <ui:composition>
+            <div id="layoutSidenav_nav" style="height: 100%;">
+                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                    <div class="sb-sidenav-menu">
+                        <div class="nav">
+                            <div class="sb-sidenav-menu-heading">admin</div>
+                            <a class="nav-link" href="admin.xhtml">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                Trang chủ
+                            </a>
+
+                            <div class="sb-sidenav-menu-heading">Các chức năng</div>
+                            <a style="cursor: pointer;" class="nav-link collapsed" data-toggle="collapse" data-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                                Quản lý nhân viên
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+
+                            <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="employees.xhtml">Danh sách nhân viên</a>
+                                    <a class="nav-link" href="tourGuide.xhtml">Hướng dẫn viên</a>
+                                    <a class="nav-link" href="driver.xhtml">Lái xe</a>
+                                </nav>
+
+                            </div>
+
+                            <a style="cursor: pointer;" class="nav-link collapsed" data-toggle="collapse" data-target="#collapseDriverAndOto" aria-expanded="false" aria-controls="collapseLayouts">
+                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                                Quản lý Ôto
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+
+                            <div class="collapse" id="collapseDriverAndOto" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="oto.xhtml">Danh sách oto</a>
+                                    <a class="nav-link" href="otoDriver.xhtml">Lái xe và Oto</a>
+                                </nav>
+
+                            </div>
+                            
+                            <a style="cursor: pointer;" class="nav-link collapsed" data-toggle="collapse" data-target="#collapseTour" aria-expanded="false" aria-controls="collapseLayouts">
+                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                                Quản lý Tour
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+
+                            <div class="collapse" id="collapseTour" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="tour.xhtml">Tour</a>
+                                    <a class="nav-link" href="tour3.xhtml">Tour đã thanh toán</a>
+                                </nav>
+                            </div>
+                            
+                            <a style="cursor: pointer;" class="nav-link collapsed" data-toggle="collapse" data-target="#collapseBill" aria-expanded="false" aria-controls="collapseLayouts">
+                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                                Quản lý Bill
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+
+                            <div class="collapse" id="collapseBill" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="bill.xhtml">Bill</a>
+                                </nav>
+                            </div>
+                            
+                            <a style="cursor: pointer;" class="nav-link collapsed" data-toggle="collapse" data-target="#collapseMoney" aria-expanded="false" aria-controls="collapseLayouts">
+                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                                Quản lý Thu Chi
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+
+                            <div class="collapse" id="collapseMoney" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="salaryTourGuide.xhtml">Hướng dẫn viên</a>
+                                </nav>
+                            </div>
+
+                            <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                                <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                                Trang
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+
+                            <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
+                                        Quản lí tài khoản
+                                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                    </a>
+                                    <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
+                                        <nav class="sb-sidenav-menu-nested nav">
+                                            <a class="nav-link" href="index.xhtml">Đăng nhập</a>
+                                            <a class="nav-link" href="register.xhtml">Đăng kí</a>
+                                            <a class="nav-link" href="password.xhtml">Quên mật khẩu</a>
+                                        </nav>
+                                    </div>
+
+                                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
+                                        Error
+                                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                    </a>
+                                    <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
+                                        <nav class="sb-sidenav-menu-nested nav">
+                                            <a class="nav-link" href="401.html">401 Page</a>
+                                            <a class="nav-link" href="404.html">404 Page</a>
+                                            <a class="nav-link" href="500.html">500 Page</a>
+                                        </nav>
+                                    </div>
+                                </nav>
+                            </div>
+
+                            <div class="sb-sidenav-menu-heading">Thông số</div>
+                            <a class="nav-link" href="charts.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                                Biểu đồ
+                            </a>
+                            <a class="nav-link" href="tables.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                Bảng tỉnh thành
+                            </a>
+                        </div>
+                    </div>
+
+                </nav>
+            </div>
+        </ui:composition>
+    </h:body>
+</html>
+

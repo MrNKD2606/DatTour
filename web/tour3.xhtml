@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/template/template.xhtml">
+            <ui:define name="content">
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-table mr-1"></i>
+                        Quản lý tour đã thanh toán
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <p:outputPanel id="opnMain">
+                            <p:outputPanel id="opnListTour" rendered="#{tourController.displayMain()}">
+                                <p:dataTable id="tblListTour" value="#{tourController.mlstTour3}" var="entity">
+                                    <p:column headerText="Tên tour">
+                                        <p:outputLabel value="#{entity.nameTour}" />
+                                    </p:column>
+                                    <p:column headerText="Ngày khởi hành">
+                                        <p:outputLabel value="#{tourController.getNgaySinhView(entity.dateStart)}" />
+                                    </p:column>
+                                    <p:column headerText="Số ngày">
+                                        <p:outputLabel value="#{entity.numberDay}" />
+                                    </p:column>
+                                    <p:column headerText="Số người đi">
+                                        <p:outputLabel value="#{tourController.customerModel.getSumCustomer(entity.idTour)}" />
+                                    </p:column>
+                                    <p:column headerText="Tổng tiền">
+                                        <p:outputLabel style="float: right;" value="#{tourController.getVND(tourController.cartModel.getTotalTour(entity.idTour))}" />
+                                    </p:column>
+                                    <p:column headerText="Điểm đi">
+                                        <p:outputLabel value="#{tourController.getCityByIdCity(entity.idDeparturePlace)}" />
+                                    </p:column>
+                                    <p:column headerText="Điểm đến">
+                                        <p:outputLabel value="#{tourController.getCityByIdCity(entity.idDestinationPlace)}" />
+                                    </p:column>
+                                    <p:column headerText="Hướng dẫn viên">
+                                        <p:outputLabel value="#{tourController.employeesModel.getTourGuideById(entity.idTourGuide).nameEmployee}" />
+                                    </p:column>
+                                    <p:column headerText="Người lái xe">
+                                        <p:outputLabel value="#{tourController.tourModel.getNameDriverIdTour(entity.idTour)}" />
+                                    </p:column>
+
+                                </p:dataTable>
+                            </p:outputPanel>
+                        </p:outputPanel>
+                    </div>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

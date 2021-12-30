@@ -1,0 +1,184 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/template/template.xhtml">
+
+            <ui:define name="content">
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-table mr-1"></i>
+                        Quản lý bill
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <p:outputPanel id="opnMain">
+                            <p:outputPanel id="opnListBill" rendered="#{cartController.displayMainBill()}">
+                                <p:dataTable id="tblListBill" value="#{cartController.mlstCart}" var="entity">
+                                    <p:column headerText="Thao tác">
+                                        <p:commandLink styleClass="pi pi-pencil" title="Sửa" process="@this" 
+                                                       update=":form_main:opnMain" actionListener="#{cartController.changeStateEditBill(entity)}"/>
+                                        <p:commandLink styleClass="pi pi-eye" title="Xem" process="@this" 
+                                                       update=":form_main:opnMain" actionListener="#{cartController.changeStateViewBill(entity)}"/>
+                                        <p:commandLink styleClass="pi pi-trash" title="Xoá" process="@this" 
+                                                       update="tblListBill, :form_main:messages" actionListener="#{cartController.handDeleteBill(entity)}">
+                                            <p:confirm header="Xác nhận xoá" message="Bạn có muốn xoá không" icon="pi pi-exclamation-triangle" />
+                                        </p:commandLink>
+                                    </p:column>
+
+                                    <p:column headerText="Tên tour">
+                                        <p:outputLabel value="#{cartController.cartModel.getTour(entity.idTour).nameTour}" />
+                                    </p:column>
+                                    <p:column headerText="Tên người đặt tour">
+                                        <p:outputLabel value="#{entity.nameOrderer}" />
+                                    </p:column>
+                                    <p:column headerText="Số điện thoại">
+                                        <p:outputLabel value="#{entity.phoneNumber}" />
+                                    </p:column>
+                                    <p:column headerText="Email">
+                                        <p:outputLabel value="#{entity.email}" />
+                                    </p:column>
+                                    <p:column headerText="Giá tiền">
+                                        <p:outputLabel style="float: right;" value="#{cartController.getVND(entity.totalMoney)}" />
+                                    </p:column>
+                                </p:dataTable>
+                            </p:outputPanel>
+
+                            <p:outputPanel id="opnDetailCart" rendered="#{not cartController.displayMainBill()}">
+                                <h1 style="text-align: center; color: red; font-size: 30px;">Thông tin Cart</h1>
+                                <p:panelGrid columns="6" layout="grid" columnClasses="ui-g-12 ui-md-3 ui-lg-1, 
+                                             ui-g-12 ui-md-9 ui-lg-3, ui-g-12 ui-md-3 ui-lg-1, 
+                                             ui-g-12 ui-md-9 ui-lg-3, ui-g-12 ui-md-3 ui-lg-1, 
+                                             ui-g-12 ui-md-9 ui-lg-3" styleClass="ui-panelgrid-blank">
+
+                                    <p:outputLabel value="Tên tour:" />
+                                    <h:outputText value="#{cartController.cartModel.getTour(cartController.cart.idTour).nameTour}"/>
+
+                                    <p:outputLabel value="Số ngày:" />
+                                    <h:outputText value="#{cartController.cartModel.getTour(cartController.cart.idTour).numberDay}"/>
+
+                                    <p:outputLabel value="Ngày đi:" />
+                                    <h:outputText value="#{cartController.getNgaySinhView(cartController.cartModel.getTour(cartController.cart.idTour).dateStart) }"/>
+
+                                    <p:outputLabel value="Tên người đặt:" for="nameOrderer" />
+                                    <p:inputText value="#{cartController.cart.nameOrderer}" id="nameOrderer" 
+                                                 required="true" requiredMessage="Tên người đặt bắt buộc nhập" disabled="#{cartController.isViewBill}"/>
+
+                                    <p:outputLabel value="Giới tính" for="gender" />
+                                    <p:selectOneRadio id="gender" value="#{cartController.cart.gender}" disabled="#{cartController.isViewBill}" required="true" rendered="true" requiredMessage="Giới tính bắt buộc nhập">
+                                        <f:selectItem itemLabel="Nam" itemValue="1" />
+                                        <f:selectItem itemLabel="Nữ" itemValue="0" />
+                                    </p:selectOneRadio>
+
+                                    <p:outputLabel value="Số điện thoại:" for="phoneNumber" />
+                                    <p:inputText value="#{cartController.cart.phoneNumber}" id="phoneNumber" 
+                                                 required="true" requiredMessage="Số điện thoại bắt buộc nhập" disabled="#{cartController.isViewBill}"/>
+
+                                    <p:outputLabel value="Email:" for="email" />
+                                    <p:inputText value="#{cartController.cart.email}" id="email" 
+                                                 required="true" requiredMessage="Email bắt buộc nhập" disabled="#{cartController.isViewBill}"/>
+
+                                    <p:outputLabel value="Địa chỉ:" for="address" />
+                                    <p:inputText value="#{cartController.cart.address}" id="address" 
+                                                 required="true" requiredMessage="Email bắt buộc nhập" disabled="#{cartController.isViewBill}"/>
+
+                                    <p:outputLabel value="Số khách:"/>
+                                    <h:outputText value="#{cartController.mlstCustomer.size()}"/>
+
+                                    <p:outputLabel value="Số chỗ còn:"/>
+                                    <h:outputText id="numberPeople" value="#{cartController.cartModel.getTour(cartController.cart.idTour).numberPeople - cartController.customerModel.getNumberCusTourNotCart(cartController.cart.idTour, cartController.cart.idCart) - cartController.mlstCustomer.size()}"/>
+
+                                    <p:outputLabel value="Tổng tiền:"/>
+                                    <h:outputText style="color: red; font-weight: bold;" id="numberTotal" value="#{cartController.getVND(cartController.getTongTien(cartController.mlstCustomer, cartController.cartModel.getTour(cartController.cart.idTour).dateStart, cartController.cartModel.getTour(cartController.cart.idTour).price))}"/>
+                                </p:panelGrid>
+                                <p:panelGrid columns="2" layout="grid" columnClasses="ui-g-12 ui-md-3 ui-lg-1, ui-g-12 ui-md-9 ui-lg-11"
+                                             styleClass="ui-panelgrid-blank">
+                                    <p:outputLabel value="Ghi chú:" for="description" />
+                                    <p:inputTextarea id="description" rows="3" cols="50" value="#{cartController.cart.description}" disabled="#{cartController.isViewBill}"/>
+                                </p:panelGrid>
+
+                                <p:outputPanel id="opnCustomer">
+                                    <h1 style="text-align: center; color: red; font-size: 30px;">Danh sách hành khách</h1>
+                                    <p:commandButton value="Thêm khách hàng" process="@this" update=":form_main:opnCustomer" actionListener="#{cartController.changeStateAdd()}" rendered="#{cartController.checkAddCusToCart(cartController.cart)}"/>
+                                    <p:outputPanel id="opnCustomerAdd" rendered="#{not cartController.displayMain()}">
+                                        <p:panel id="panelRegister" header="Khách hàng" >
+                                            <p:panelGrid columns="4" layout="grid" columnClasses="ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-9 ui-lg-4, ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-9 ui-lg-4" styleClass="ui-panelgrid-blank">
+                                                <p:outputLabel value="Họ tên" for="nameCustomerAdd" />
+                                                <p:inputText value="#{cartController.customer.nameCustomer}" id="nameCustomerAdd" 
+                                                             required="true" requiredMessage="Tên tour bắt buộc nhập" disabled="#{cartController.isView}">
+                                                </p:inputText>
+
+                                                <p:outputLabel value="Giới tính" for="genderCustomerAdd" />
+                                                <p:selectOneRadio id="genderCustomerAdd" value="#{cartController.customer.gender}" disabled="#{cartController.isView}">
+                                                    <f:selectItem itemLabel="Nam" itemValue="1" />
+                                                    <f:selectItem itemLabel="Nữ" itemValue="0" />
+                                                </p:selectOneRadio>
+
+                                                <p:outputLabel value="Ngày sinh" for="birtDayCustomerAdd" />
+                                                <p:calendar id="birtDayCustomerAdd" value="#{cartController.customer.birthDay}"
+                                                            navigator="true" pattern="dd/MM/yyyy" maxdate="#{cartController.sysDate}" disabled="#{cartController.isView}"/>
+                                            </p:panelGrid>
+
+                                            <center>
+                                                <p:commandButton value="Thêm" icon="pi pi-save" process="@this, form_main:opnCustomerAdd" update="opnDetailCart :form_main:messages" actionListener="#{cartController.handSaveCustomner()}" rendered="#{not cartController.isView}"  />
+                                                <p:commandButton value="Quay lại" icon="pi pi-refresh" process="@this" update="opnCustomer" actionListener="#{cartController.handCancel()}" />
+                                            </center>
+                                        </p:panel>
+                                    </p:outputPanel>
+
+                                    <p:dataTable id="tblCustomer" value="#{cartController.mlstCustomer}" var="cus">
+                                        <p:column headerText="Thao tác">
+                                            <p:commandLink styleClass="pi pi-pencil" title="Sửa" process="@this" update=":form_main:opnMain" actionListener="#{cartController.changeStateEdit(cus, cartControler.cart)}" disabled="#{cartController.isViewBill}"/>
+                                            <p:commandLink styleClass="pi pi-eye" title="Xem" process="@this" update=":form_main:opnMain" actionListener="#{cartController.changeStateView(cus, cartControler.cart)}" disabled="#{cartController.isViewBill}"/>
+                                            <p:commandLink styleClass="pi pi-trash" title="Xoá" process="@this" update=":form_main:opnDetailCart, :form_main:messages, :form_main:tblCustomer" actionListener="#{cartController.handDeleteCustomer(cus)}" disabled="#{cartController.isViewBill}">
+                                                <p:confirm header="Xác nhận xoá" message="Bạn có muốn xoá không" icon="pi pi-exclamation-triangle" />
+                                            </p:commandLink>
+                                        </p:column>
+                                        <p:column headerText="Tên khách hàng">
+                                            <p:outputLabel value="#{cus.nameCustomer}" />
+                                        </p:column>
+                                        <p:column headerText="Giới tính">
+                                            <p:outputLabel value="Nam" rendered="#{cus.gender eq '1'}"/>
+                                            <p:outputLabel value="Nữ" rendered="#{cus.gender eq '0'}"/>
+                                        </p:column>
+                                        <p:column headerText="Ngày sinh">
+                                            <p:outputLabel value="#{cartController.getNgaySinhView(cus.birthDay)}" />
+                                        </p:column>
+                                        <p:column headerText="Tuổi">
+                                            <p:outputLabel value="#{cartController.getAge(cus.birthDay, cartController.cartModel.getTour(cartController.cart.idTour).dateStart)}" />
+                                        </p:column>
+                                        <p:column headerText="Độ tuỏi">
+                                            <p:outputLabel value="#{cartController.getDoTuoi(cartController.getAge(cus.birthDay, cartController.cartModel.getTour(cartController.cart.idTour).dateStart))}" />
+                                        </p:column>
+                                        <p:column headerText="Giá tiền">
+                                            <p:outputLabel style="float: right;" value="#{cartController.getVND(cartController.getTien(cartController.getAge(cus.birthDay, cartController.cartModel.getTour(cartController.cart.idTour).dateStart), cartController.cartModel.getTour(cartController.cart.idTour).price))}" />
+                                        </p:column>
+                                    </p:dataTable>
+
+                                    <p:outputLabel style="float: right;" id="tongTien" value="Tổng cộng: #{cartController.getVND(cartController.getTongTien(cartController.mlstCustomer, cartController.cartModel.getTour(cartController.cart.idTour).dateStart, cartController.cartModel.getTour(cartController.cart.idTour).price))}"/>
+                                    <br /> <br />
+                                    <center>
+                                        <p:commandButton value="Đồng ý" icon="pi pi-save" process="@this, opnDetailCart" update="opnMain :form_main:messages" rendered="#{not cartController.isViewBill}" actionListener="#{cartController.handSave()}"/>
+                                        <p:commandButton value="Quay lại" icon="pi pi-refresh" process="@this" update="opnMain" actionListener="#{cartController.handCancelBill()}" />
+                                    </center>
+                                </p:outputPanel>
+                            </p:outputPanel>
+                        </p:outputPanel>
+                    </div>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/template/template.xhtml">
+
+            <ui:define name="content">
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-table mr-1"></i>
+                        Quản lý lương nhân viên
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <p:outputPanel id="opnMain">
+                            <!--Danh sách hướng nhân viên-->
+                            <p:outputPanel id="opnListEmployee">                                
+                                <p:dataTable id="tblEmployee" value="#{employeesController.mlstEmployees}" var="entity">
+
+                                    <p:column headerText="Công việc">
+                                        <p:outputLabel value="Lái xe" rendered="#{entity.role eq '1'}"/>
+                                        <p:outputLabel value="Hướng dẫn viên" rendered="#{entity.role eq '2'}"/>
+                                        <!--<p:outputLabel value="Chưa có xe" rendered="#{entity.status eq '2'}"/>-->
+                                    </p:column>
+                                    <p:column headerText="Tên hướng dẫn viên">
+                                        <p:outputLabel value="#{entity.nameEmployee}" />
+                                    </p:column>
+                                    <p:column headerText="Ngày sinh">
+                                        <p:outputLabel value="#{employeesController.getNgaySinhView(entity.birthDay)}" />
+                                    </p:column>
+                                    <p:column headerText="Địa chỉ">
+                                        <p:outputLabel value="#{entity.address}" />
+                                    </p:column>
+                                    <p:column headerText="Số điện thoại">
+                                        <p:outputLabel value="#{entity.phoneNumber}" />
+                                    </p:column>
+                                    <p:column headerText="Giới tính">
+                                        <p:outputLabel value="Nam" rendered="#{entity.gender eq '1'}"/>
+                                        <p:outputLabel value="Nữ" rendered="#{entity.gender eq '0'}"/>
+                                    </p:column>
+                                    <p:column headerText="Trạng thái">
+                                        <p:outputLabel value="Nghỉ việc" rendered="#{entity.status eq '0'}"/>
+                                        <p:outputLabel value="Đã có tour" rendered="#{entity.status eq '1'}"/>
+                                        <p:outputLabel value="Chưa có tour" rendered="#{entity.status eq '2'}"/>
+                                    </p:column>
+                                    <p:column headerText="Thu nhập">
+                                        <p:outputLabel value="#{cartController.getVND(cartController.cartModel.getTotalTour(entity))}" />
+                                    </p:column>
+                                    <p:column headerText="Doanh thu theo tháng">
+                                        <p:outputLabel value="#{cartController.getVND(cartController.cartModel.getMoneyToMonth(12, 2021))}" />
+                                    </p:column>
+                                    <p:column headerText="Doanh thu theo Quý">
+                                        <p:outputLabel value="#{cartController.getVND(cartController.cartModel.getMoneyToQuarter(9, 12, 2021))}" />
+                                    </p:column>
+                                </p:dataTable>
+                            </p:outputPanel>
+                        </p:outputPanel>
+                    </div>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

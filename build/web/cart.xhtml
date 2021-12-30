@@ -1,0 +1,154 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <title>Cart</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/template/template.xhtml">
+
+            <ui:define name="content">
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-table mr-1"></i>
+                        Quản lý đặt tour
+                    </div>
+
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <h1 style="text-align: center; color: red; font-size: 30px;">Thông tin tour</h1>
+                            <p:panelGrid columns="3" layout="grid" columnClasses=  "ui-g-12 ui-md-4 ui-lg-4, 
+                                         ui-g-12 ui-md-4 ui-lg-4, 
+                                         ui-g-12 ui-md-4 ui-lg-4" styleClass="ui-panelgrid-blank">
+
+                                <h:outputText value="Tên tour: #{cartController.getTourClick().nameTour}" />
+                                <h:outputText value="Ngày khởi hành: #{otoController.getNgaySinhView(cartController.getTourClick().dateStart)}" />
+                                <h:outputText value="Số ngày: #{cartController.getTourClick().numberDay}" />
+                                <h:outputText id="numberPeople" value="Số chỗ còn nhận: #{cartController.getTourClick().numberPeople - cartController.getNumberCus(cartController.getTourClick().idTour) - cartController.mlstCustomer.size()}" />
+                                <h:outputText value="Giá: #{cartController.getVND(cartController.getTourClick().price)}" />
+                            </p:panelGrid>
+
+                            <h1 style="text-align: center; color: red; font-size: 30px;">Giá tour cơ bản</h1>
+                            <p:dataTable id="tblOto" value="" var="">
+                                <p:column headerText="Người lớn (Từ 12 tuổi trở lên)">
+                                    <p:outputLabel value="#{cartController.getVND(cartController.getTourClick().price)}" />
+                                </p:column>
+
+                                <p:column headerText="Trẻ em (Từ 5 tuổi đến dưới 12 tuổi)">
+                                    <p:outputLabel value="#{cartController.getVND(cartController.getTourClick().price * 0.5)}" />
+                                </p:column>
+
+                                <p:column headerText="Trẻ nhỏ (Từ 2 tuổi đến dưới 5 tuổi)">
+                                    <p:outputLabel value="#{cartController.getVND(cartController.getTourClick().price * 0.25)}" />
+                                </p:column>
+
+                                <p:column headerText="Em bé (Dưới 2 tuổi)">
+                                    <p:outputLabel value="#{cartController.getVND(cartController.getTourClick().price * 0.1)}" />
+                                </p:column>
+                            </p:dataTable>
+
+                            <p:outputPanel id="opnCart" rendered="true">
+                                <h1 style="text-align: center; color: red; font-size: 30px;">Thông tin liên lạc</h1>
+                                <p:outputPanel id="opnOrderer" rendered="true">
+                                    <p:panelGrid columns="4" layout="grid" columnClasses="ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-9 ui-lg-4, ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-9 ui-lg-4" styleClass="ui-panelgrid-blank">
+                                        <p:outputLabel value="Họ tên" for="nameOrderer" />
+                                        <p:inputText value="#{cartController.cart.nameOrderer}" id="nameOrderer" 
+                                                     required="true" requiredMessage="Tên tour bắt buộc nhập" disabled="#{cartController.isView}"/>
+
+                                        <p:outputLabel value="Giới tính" for="gender" />
+                                        <p:selectOneRadio id="gender" value="#{cartController.cart.gender}" disabled="#{cartController.isView}" required="true" requiredMessage="Giới tính bắt buộc nhập">
+                                            <f:selectItem itemLabel="Nam" itemValue="1" />
+                                            <f:selectItem itemLabel="Nữ" itemValue="0" />
+                                        </p:selectOneRadio>
+
+                                        <p:outputLabel value="Email" for="email" />
+                                        <p:inputText id="email" value="#{cartController.cart.email}" maxlength="50" disabled="#{cartController.isView}">   
+                                        </p:inputText>
+
+                                        <p:outputLabel value="Số điện thoại" for="phoneNumber" />
+                                        <p:inputText id="phoneNumber" value="#{cartController.cart.phoneNumber}" maxlength="10" disabled="#{cartController.isView}" required="true" requiredMessage="Số điện thoại bắt buộc nhập">      
+                                            <p:ajax global="false" event="blur" process="@this, :form_main:phoneNumber" update=":form_main:phoneNumber" />
+                                        </p:inputText>
+                                    </p:panelGrid>
+                                    <p:panelGrid columns="2" layout="grid" columnClasses="ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-9 ui-lg-10"
+                                                 styleClass="ui-panelgrid-blank">
+                                        <p:outputLabel value="Địa chỉ" for="address" />
+                                        <p:inputText id="address" value="#{cartController.cart.address}" maxlength="60" disabled="#{cartController.isView}"/> 
+                                        <p:outputLabel value="Ghi chú" for="description" />
+                                        <p:inputTextarea id="description" rows="3" cols="50" value="#{cartController.cart.description}" disabled="#{cartController.isView}"/>
+                                    </p:panelGrid>
+                                </p:outputPanel>
+
+                                <p:outputPanel id="opnCustomer" rendered="true">
+                                    <p:commandButton value="Thêm khách hàng" process="@this" update=":form_main:opnCustomer" actionListener="#{cartController.changeStateAdd()}" rendered="#{cartController.checkAdd(cartController.getTourClick().idTour)}"/>
+                                    <p:outputPanel id="opnCustomerAdd" rendered="#{not cartController.displayMain()}">
+                                        <p:panel id="panelRegister" header="Khách hàng" >
+                                            <p:panelGrid columns="4" layout="grid" columnClasses="ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-9 ui-lg-4, ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-9 ui-lg-4" styleClass="ui-panelgrid-blank">
+                                                <p:outputLabel value="Họ tên" for="nameCustomerAdd" />
+                                                <p:inputText value="#{cartController.customer.nameCustomer}" id="nameCustomerAdd" 
+                                                             required="true" requiredMessage="Tên tour bắt buộc nhập" disabled="#{cartController.isView}">
+                                                </p:inputText>
+
+                                                <p:outputLabel value="Giới tính" for="genderCustomerAdd" />
+                                                <p:selectOneRadio id="genderCustomerAdd" value="#{cartController.customer.gender}" disabled="#{cartController.isView}">
+                                                    <f:selectItem itemLabel="Nam" itemValue="1" />
+                                                    <f:selectItem itemLabel="Nữ" itemValue="0" />
+                                                </p:selectOneRadio>
+
+                                                <p:outputLabel value="Ngày sinh" for="birtDayCustomerAdd" />
+                                                <p:calendar id="birtDayCustomerAdd" value="#{cartController.customer.birthDay}"
+                                                            navigator="true" pattern="dd/MM/yyyy" maxdate="#{cartController.sysDate}" disabled="#{cartController.isView}"/>
+                                            </p:panelGrid>
+
+                                            <center>
+                                                <p:commandButton value="Thêm" icon="pi pi-save" process="@this, form_main:opnCustomerAdd" update="numberPeople opnCustomer :form_main:messages" actionListener="#{cartController.handSaveCustomner()}" rendered="#{not cartController.isView}"  />
+                                                <p:commandButton value="Quay lại" icon="pi pi-refresh" process="@this" update="opnCustomer" actionListener="#{cartController.handCancel()}" />
+                                            </center>
+                                        </p:panel>
+                                    </p:outputPanel>
+
+                                    <h1 style="text-align: center; color: red; font-size: 30px;">Danh sách khách hàng</h1>
+                                    <p:dataTable id="tblCustomer" value="#{cartController.mlstCustomer}" var="entity">
+                                        <p:column headerText="Tên khách hàng">
+                                            <p:outputLabel value="#{entity.nameCustomer}" />
+                                        </p:column>
+                                        <p:column headerText="Giới tính">
+                                            <p:outputLabel value="Nam" rendered="#{entity.gender eq '1'}"/>
+                                            <p:outputLabel value="Nữ" rendered="#{entity.gender eq '0'}"/>
+                                        </p:column>
+                                        <p:column headerText="Ngày sinh">
+                                            <p:outputLabel value="#{cartController.getNgaySinhView(entity.birthDay)}" />
+                                        </p:column>
+                                        <p:column headerText="Tuổi">
+                                            <p:outputLabel value="#{cartController.getAge(entity.birthDay, cartController.getTourClick().dateStart)}" />
+                                        </p:column>
+                                        <p:column headerText="Độ tuỏi">
+                                            <p:outputLabel value="#{cartController.getDoTuoi(cartController.getAge(entity.birthDay, cartController.getTourClick().dateStart))}" />
+                                        </p:column>
+                                        <p:column headerText="Giá tiền">
+                                            <p:outputLabel value="#{cartController.getVND(cartController.getTien(cartController.getAge(entity.birthDay, cartController.getTourClick().dateStart), cartController.getTourClick().price))}" />
+                                        </p:column>
+                                    </p:dataTable>
+                                    <p:outputLabel style="float: right;" id="tongTien" value="Tổng cộng: #{cartController.getVND(cartController.getTongTien(cartController.mlstCustomer, cartController.getTourClick().dateStart, cartController.getTourClick().price))}"/>
+                                </p:outputPanel>
+                                <br /> <br />
+                                <center>
+                                    <p:commandButton value="Đồng ý" icon="pi pi-save" process="@this, form_main:opnCart" update="opnCart :form_main:messages" action="#{cartController.handSaveToString()}" />
+                                    <p:commandButton value="Quay lại" icon="pi pi-refresh" process="@this" update="opnCart" action="tour.xhtml"/>
+                                </center>
+                            </p:outputPanel>
+
+                        </div>
+                    </div>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+
